@@ -1,0 +1,30 @@
+{
+  "plat_nomor": "B1083UFJ",
+  "load_id": "67898787",
+  "status ": "OPEN",
+  "timestamp ": "2025-02-12 12:00:00",
+  "list_order": [
+    {
+      "order_no": "TST20193012",
+      "pick": {
+        "seq": "1",
+        "geofence_name": "CIKARANG BARAT"
+      },
+      "drop": {
+        "seq": "1",
+        "geofence_name": "BENDA"
+      }
+    },
+    {
+      "order_no": "TST20193013",
+      "pick": {
+        "seq": "2",
+        "geofence_name": "CIKARANG UTARA"
+      },
+      "drop": {
+        "seq": "2",
+        "geofence_name": "BENDA"
+      }
+    }
+  ]
+}
