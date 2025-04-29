@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 import json
-import pandas as pd
+#import pandas as pd
 import datetime
 now = datetime.datetime.now().strftime('%Y%m%d')
 
@@ -14,6 +14,17 @@ def process_single_file(file_path, output_folder):
         
         area_name = file_path.stem
         # Remove WADMKC_ prefix if present  
+        folder_path = str(file_path.parent)
+        if "JawaTengah" in folder_path:
+            geofence_group_ids = 2776
+            area_description = "Kecamatan di Jawatengah"
+        elif "JawaTimur" in folder_path:
+            geofence_group_ids = 2777
+            area_description = "Kecamatan di Jawatimur"
+        else:
+            geofence_group_ids = 2775  # default value
+            area_description = "Kecamatan di Jawabarat"  # default value
+
     
         polygon_count = 0
         
@@ -29,7 +40,8 @@ def process_single_file(file_path, output_folder):
                     polygons = [poly[0] for poly in geometry['coordinates']]  # Multiple polygons
                 
                 # Process each polygon
-                for coords in polygons:
+                total_polygons = len(polygons)
+                for idx, coords in enumerate(polygons):
                     # Convert coordinates to required format
                     polygon = [
                         {"lat": coord[1], "lng": coord[0]} 
@@ -37,17 +49,23 @@ def process_single_file(file_path, output_folder):
                     ]
                     
                     # Create output filename
-                    output_file = output_folder / f"{file_path.stem}_polygon_{polygon_count}.json"
+                    base_name = file_path.stem
+                    if base_name.startswith("WADMKC_"):
+                        base_name = base_name[len("WADMKC_"):]
                     
-                    polygon_name= output_file.name
-                    if polygon_name.startswith("WADMKC_"):
-                        polygon_name=polygon_name[len("WADMKC_"):]
+                    # Add number suffix only if there are multiple polygons
+                    if total_polygons > 1:
+                        polygon_name = f"{base_name}_{idx + 1}"
+                        output_file = output_folder / f"{file_path.stem}_{idx + 1}.json"
+                    else:
+                        polygon_name = base_name
+                        output_file = output_folder / f"{file_path.stem}.json"
                     #create complete output data structure
                     output_data={
                         "polygon": polygon,
                         "name": polygon_name,
-                        "geofence_group_ids" : [2775],
-                        "description":"Kecamatan di Jawabarat"
+                        "geofence_group_ids" : geofence_group_ids,
+                        "description":area_description
                     }
 
                     # Save polygon to file
@@ -90,7 +108,8 @@ def batch_process_folder(input_folder, output_folder):
 
 if __name__ == "__main__":
     # Replace these paths with your actual folder paths
-    input_folder = "GEOFENCES\\Geojson_jawabarat\\"
-    output_folder = "GEOFENCES\\Geojson_jawabarat\\jawabarat-CONVERTED"
+    input_folder = "GEOFENCES\\JawaTimur-Exported\\JawaTimur-Exported"
+    output_folder = "GEOFENCES\\JawaTimur-Exported\\JawaTimur-Converted"
+    # Call the batch process function
     
     batch_process_folder(input_folder, output_folder)

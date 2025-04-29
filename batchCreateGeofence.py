@@ -72,5 +72,5 @@ def batch_post_geofences(folder_path):
     print(f"Failed posts: {failed_posts}")
 
 if __name__ == "__main__":
-    folder_path = "GEOFENCES\\Geojson_jawabarat\\jawabarat-CONVERTED"
+    folder_path = "GEOFENCES\\JawaTimur-Exported\\Java-Converted"
     batch_post_geofences(folder_path)
